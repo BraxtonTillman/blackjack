@@ -1,4 +1,3 @@
-// Create deck
 const deck = [
     { suit: "Hearts", value: "Ace"},
     { suit: "Hearts", value: "2"},
@@ -54,48 +53,93 @@ const deck = [
     { suit: "Diamonds", value: "King"},
 ]
 
-
-// Shuffle deck
-function shuffleDeck(deck){
-
-    let currentIndex = deck.length;
-    
-    while (currentIndex !== 0) {
-       // Pick a remaining element
-        let randomIndex = Math.floor(Math.random() * currentIndex);
-       currentIndex--;
-       
-       // And swap it with the current element 
-       [deck[currentIndex], deck[randomIndex]] =
-         [deck[randomIndex], deck[currentIndex]];
-    }
-    return deck;
-}
-// Wire start button
-document.getElementById("start-game").addEventListener('click', () => {
-    shuffleDeck(deck);
-    dealInitialCards();
-})
-
-// Initialize game state
 let playerHand = [];
 let dealerHand = [];
 
-// Deal initial cards
-function dealInitialCards() {
-    playerHand = [deck.pop(), deck.pop()];
-    dealerHand = [deck.pop(), deck.pop()];
-    updateHands();
+// Shuffle deck
+function shuffleDeck(deck) {
+    let currentIndex = deck.length;
+    
+    while (currentIndex !== 0) {
+        let randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        [deck[currentIndex], deck[randomIndex]] =
+         [deck[randomIndex], deck[currentIndex]]
+    }
+    return deck;
 }
-// Update Hands
-function updateHands() {
+
+
+// Wire start button
+document.getElementById("start-game").addEventListener('click', () => {
+    document.getElementById("game-area").style.display = "block";
+
+    shuffleDeck(deck);
+    dealInitialCards();
+});
+
+// Update hands (hide dealer's first card)
+function updateHands(hideDealerCard = true) {
     const playerHandDiv = document.getElementById("player-hand");
     const dealerHandDiv = document.getElementById("dealer-hand");
 
+    // Show hands (hide dealer's first card)
     playerHandDiv.innerHTML = playerHand.map(card => `${card.value} of ${card.suit}`).join(', ');
-    dealerHandDiv.innerHTML = dealerHand.map(card => `${card.value} of ${card.suit}`).join(', ');
+    
+    if (hideDealerCard) {
+        dealerHandDiv.innerHTML = `[Hidden], ${dealerHand[1].value} of ${dealerHand[1].suit}`;
+    } else {
+        dealerHandDiv.innerHTML = dealerHand.map(card => `${card.value} of ${card.suit}`).join(', ');
+    }
 }
 
-// Testing
-console.log(playerHand, dealerHand);
-console.log(deck);
+// Deal initial hands 
+function dealInitialCards() {
+    // Deal 2 cards to player and dealer
+    playerHand = [deck.pop(), deck.pop()];
+    dealerHand = [deck.pop(), deck.pop()];
+
+    updateHands();
+}
+
+// Wire hit button
+document.getElementById("hit").addEventListener('click', () => {
+
+});
+
+// Wire stand button
+document.getElementById("stand").addEventListener('click', () => {
+
+});
+
+// Hit function (if dealer is under 17 they must hit)
+function hit() {
+    // Add a card
+
+    updateHands();
+}
+
+// Stand function
+function stand() {
+    // Stop and reveal dealer's card
+    updateHands(false);
+    
+}
+
+// Bust Check (Check after every hit if busted) function
+function checkBust() {
+
+}
+
+// Compare function (Compare player and dealer)
+function compareCards() {
+
+}
+
+// Reset function
+function reset() {
+
+}
+
+// OPTIONAL: Create Deck function
