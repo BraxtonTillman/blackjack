@@ -306,6 +306,4 @@ function createDeck() {
   return deck;
 }
 
-// OPTIONAL: Create Deck function
 // Need to check for blackjack
-// Score Tracking
