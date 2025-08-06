@@ -11,19 +11,36 @@ export function updateHands(hideDealerCard = true, gameState) {
   const { playerHand, dealerHand } = gameState;
   const playerScore = calculateHandTotal(playerHand);
   const dealerScore = hideDealerCard ? "?" : calculateHandTotal(dealerHand);
+  const playerHandDiv = document.getElementById("player-hand");
+  const dealerHandDiv = document.getElementById("dealer-hand");
 
-  document.getElementById("player-hand").innerText = playerHand
-    .map((card) => `${card.value} of ${card.suit}`)
-    .join(", ");
+  // Player hand
+  playerHandDiv.innerHTML = playerHand
+    .map(
+      (card) =>
+        `<img src="assets/cards/${getCardImageFilename(
+          card
+        )}" class="card-img" />`
+    )
+    .join("");
 
-  if (hideDealerCard && dealerHand.length > 1) {
-    document.getElementById(
-      "dealer-hand"
-    ).innerText = `[Hidden], ${dealerHand[1].value} of ${dealerHand[1].suit}`;
+  // Dealer hand
+  if (hideDealerCard) {
+    dealerHandDiv.innerHTML = `
+    <img src="assets/cards/back.png" class="card-img" />
+    <img src="assets/cards/${getCardImageFilename(
+      dealerHand[1]
+    )}" class="card-img" />
+  `;
   } else {
-    document.getElementById("dealer-hand").innerText = dealerHand
-      .map((card) => `${card.value} of ${card.suit}`)
-      .join(", ");
+    dealerHandDiv.innerHTML = dealerHand
+      .map(
+        (card) =>
+          `<img src="assets/cards/${getCardImageFilename(
+            card
+          )}" class="card-img" />`
+      )
+      .join("");
   }
 
   document.getElementById("player-score").innerText = `Score: ${playerScore}`;
@@ -66,4 +83,10 @@ export function resetUI() {
 
   toggleButtons(true); // Enable buttons again
   document.getElementById("reset-game").style.display = "none";
+}
+
+export function getCardImageFilename(card) {
+  const value = card.value.toLowerCase();
+  const suit = card.suit.toLowerCase();
+  return `${value}_of_${suit}.png`;
 }
