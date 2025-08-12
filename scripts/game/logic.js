@@ -1,5 +1,11 @@
 // logic.js
-import { updateHands, showResult, toggleButtons } from "../ui/updateUI.js";
+import {
+  updateHands,
+  showResult,
+  toggleButtons,
+  updateBetDisplay,
+} from "../ui/updateUI.js";
+import { resolveRound } from "./betting.js";
 import { compareCards } from "./compare.js";
 
 /**
@@ -62,10 +68,14 @@ export function checkBust(hand, isPlayer, gameState) {
     showResult(
       isPlayer ? "You busted! Dealer wins." : "Dealer busted! You win."
     );
+    resolveRound(isPlayer ? "lose" : "win", gameState);
+    updateBetDisplay(true, gameState);
     updateHands(false, gameState);
     toggleButtons(false);
+
     return true;
   }
+
   return false;
 }
 
@@ -144,15 +154,21 @@ export function checkBlackjack(playerHand, dealerHand, gameState) {
   gameState.dealerTotal = calculateHandTotal(dealerHand);
 
   if (gameState.playerTotal === 21 && gameState.dealerTotal !== 21) {
+    resolveRound("blackjack", gameState);
+    updateBetDisplay(true, gameState);
     updateHands(false, gameState);
     showResult("BlackJack! You Win!");
     toggleButtons(false);
   } else if (gameState.playerTotal !== 21 && gameState.dealerTotal === 21) {
+    resolveRound("lose", gameState);
+    updateBetDisplay(true, gameState);
     updateHands(false, gameState);
     showResult("Dealer BlackJack! Dealer Wins!");
     toggleButtons(false);
   } else if (gameState.playerTotal === 21 && gameState.dealerTotal === 21) {
     updateHands(false, gameState);
+    updateBetDisplay(true, gameState);
+    resolveRound("push", gameState);
     showResult("You and Dealer have BlackJack! Push.");
     toggleButtons(false);
   }

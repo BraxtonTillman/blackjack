@@ -43,8 +43,12 @@ export function updateHands(hideDealerCard = true, gameState) {
       .join("");
   }
 
-  document.getElementById("player-score").innerText = `Score: ${playerScore}`;
-  document.getElementById("dealer-score").innerText = `Score: ${dealerScore}`;
+  document.getElementById(
+    "player-score"
+  ).innerText = `Player Score: ${playerScore}`;
+  document.getElementById(
+    "dealer-score"
+  ).innerText = `Dealer Score: ${dealerScore}`;
 }
 
 /**
@@ -89,4 +93,22 @@ export function getCardImageFilename(card) {
   const value = card.value.toLowerCase();
   const suit = card.suit.toLowerCase();
   return `${value}_of_${suit}.png`;
+}
+
+export function updateBetDisplay(isBetAccepted, gameState) {
+  if (isBetAccepted) {
+    document.getElementById(
+      "current-bet"
+    ).innerText = `Current Bet: $${gameState.currentBet}`;
+    document.getElementById(
+      "player-balance"
+    ).innerText = `Balance: $${gameState.playerBalance}`;
+  } else {
+    showResult("Insufficient amount.");
+    resetUI();
+  }
+}
+
+export function clearResult() {
+  document.getElementById("result").innerText = "";
 }
