@@ -1,5 +1,7 @@
 // betting.js
 
+import { updateStats } from "../ui/updateUI.js";
+
 /**
  * Payout multipliers for each round outcome.
  */
@@ -38,12 +40,17 @@ export function placeBet(amount, gameState) {
 export function resolveRound(outcome, gameState) {
   if (outcome === "win") {
     gameState.playerBalance += gameState.currentBet * PAYOUTS[outcome];
+    gameState.wins++;
   } else if (outcome === "blackjack") {
     gameState.playerBalance += gameState.currentBet * PAYOUTS[outcome];
+    gameState.wins++;
   } else if (outcome === "push") {
     gameState.playerBalance += gameState.currentBet * PAYOUTS[outcome];
   } else if (outcome !== "lose") {
     console.warn(`Unknown outcome: ${outcome}`);
+  } else {
+    gameState.losses++;
   }
+  updateStats(gameState);
   gameState.currentBet = 0;
 }

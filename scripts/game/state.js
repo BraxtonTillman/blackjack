@@ -26,4 +26,10 @@ export const gameState = {
 
   /** @type {number} The amount currently wagered for this round. */
   currentBet: 0,
+
+  /** @type {number} Total rounds won by the player. */
+  wins: 0,
+
+  /** @type {number} Total rounds lost by the player. */
+  losses: 0,
 };

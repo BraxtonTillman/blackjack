@@ -134,3 +134,13 @@ export function resetUI() {
 function getCardImageFilename(card) {
   return `${card.value.toLowerCase()}_of_${card.suit.toLowerCase()}.png`;
 }
+
+/**
+ * Updates the wins and losses count in the UI.
+ *
+ * @param {Object} state - The current game state object.
+ */
+export function updateStats(gameState) {
+  document.getElementById("wins-count").innerText = gameState.wins;
+  document.getElementById("losses-count").innerText = gameState.losses;
+}
