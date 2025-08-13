@@ -1,33 +1,39 @@
 // compare.js
 import { calculateHandTotal } from "./logic.js";
-import { showResult, toggleButtons, updateBetDisplay } from "../ui/updateUI.js";
-import { gameState } from "./state.js";
 import { resolveRound } from "./betting.js";
 
 /**
- * Compares the final player and dealer hand totals to determine the outcome.
- * Updates the UI with the result and disables further input.
- *
- * @param {Array} playerHand - The player's final hand.
- * @param {Array} dealerHand - The dealer's final hand.
+ * Constants for valid round outcomes.
  */
-export function compareCards(playerHand, dealerHand) {
+export const OUTCOME = {
+  WIN: "win",
+  LOSE: "lose",
+  PUSH: "push",
+  BLACKJACK: "blackjack",
+};
+
+/**
+ * Determines the round outcome by comparing the player and dealer totals.
+ * Updates the game state accordingly by resolving the round.
+ *
+ * @param {Array} playerHand - The player's hand (array of card objects).
+ * @param {Array} dealerHand - The dealer's hand (array of card objects).
+ * @param {Object} state - The current game state object.
+ * @returns {"win"|"lose"|"push"} The result of the comparison.
+ */
+export function determineOutcome(playerHand, dealerHand, state) {
   const playerTotal = calculateHandTotal(playerHand);
   const dealerTotal = calculateHandTotal(dealerHand);
 
+  let outcome;
   if (playerTotal > dealerTotal) {
-    resolveRound("win", gameState);
-    updateBetDisplay(true, gameState);
-    showResult("You win!");
+    outcome = "win";
   } else if (dealerTotal > playerTotal) {
-    resolveRound("lose", gameState);
-    updateBetDisplay(true, gameState);
-    showResult("Dealer wins!");
+    outcome = "lose";
   } else {
-    resolveRound("push", gameState);
-    updateBetDisplay(true, gameState);
-    showResult("Push.");
+    outcome = "push";
   }
 
-  toggleButtons(false);
+  resolveRound(outcome, state);
+  return outcome; // "win", "lose", or "push"
 }

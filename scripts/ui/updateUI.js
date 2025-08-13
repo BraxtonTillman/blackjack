@@ -1,70 +1,104 @@
-// updateUI.js
+// blackjackUI.js
 import { calculateHandTotal } from "../game/logic.js";
 
 /**
- * Updates the UI to show player and dealer hands and their scores.
- *
- * @param {boolean} hideDealerCard - If true, hides the dealer's first card.
- * @param {Object} gameState - The current state of the game.
+ * Display messages for each possible outcome.
  */
-export function updateHands(hideDealerCard = true, gameState) {
-  const { playerHand, dealerHand } = gameState;
-  const playerScore = calculateHandTotal(playerHand);
-  const dealerScore = hideDealerCard ? "?" : calculateHandTotal(dealerHand);
-  const playerHandDiv = document.getElementById("player-hand");
-  const dealerHandDiv = document.getElementById("dealer-hand");
+const OUTCOME_MESSAGES = {
+  win: "You win!",
+  lose: "Dealer wins!",
+  push: "Push.",
+};
 
-  // Player hand
-  playerHandDiv.innerHTML = playerHand
-    .map(
-      (card) =>
-        `<img src="assets/cards/${getCardImageFilename(
-          card
-        )}" class="card-img" />`
-    )
-    .join("");
-
-  // Dealer hand
-  if (hideDealerCard) {
-    dealerHandDiv.innerHTML = `
-    <img src="assets/cards/back.png" class="card-img" />
-    <img src="assets/cards/${getCardImageFilename(
-      dealerHand[1]
-    )}" class="card-img" />
-  `;
-  } else {
-    dealerHandDiv.innerHTML = dealerHand
-      .map(
-        (card) =>
-          `<img src="assets/cards/${getCardImageFilename(
-            card
-          )}" class="card-img" />`
-      )
-      .join("");
-  }
+/**
+ * Updates the visual representation of player and dealer hands,
+ * along with their scores. Optionally hides the dealer's first card.
+ *
+ * @param {boolean} [hideDealerCard=true] - Whether to hide the dealer's first card.
+ * @param {Object} state - The current game state object.
+ */
+export function updateHands(hideDealerCard = true, state) {
+  renderHand("player-hand", state.playerHand);
+  renderHand("dealer-hand", state.dealerHand, hideDealerCard);
 
   document.getElementById(
     "player-score"
-  ).innerText = `Player Score: ${playerScore}`;
-  document.getElementById(
-    "dealer-score"
-  ).innerText = `Dealer Score: ${dealerScore}`;
+  ).innerText = `Player Score: ${calculateHandTotal(state.playerHand)}`;
+  document.getElementById("dealer-score").innerText = hideDealerCard
+    ? "?"
+    : calculateHandTotal(state.dealerHand);
 }
 
 /**
- * Displays a result message (e.g., "You win", "Dealer busted") in the UI.
+ * Renders a given hand into the specified DOM container.
+ * Optionally hides the first card (used for the dealer).
  *
- * @param {string} message - The result text to show to the player.
+ * @param {string} containerId - The DOM ID of the container.
+ * @param {Array} hand - The array of card objects to render.
+ * @param {boolean} [hideFirstCard=false] - Whether to hide the first card.
+ */
+function renderHand(containerId, hand, hideFirstCard = false) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = hand
+    .map((card, idx) =>
+      hideFirstCard && idx === 0
+        ? `<img src="assets/cards/back.png" class="card-img" />`
+        : `<img src="assets/cards/${getCardImageFilename(
+            card
+          )}" class="card-img" />`
+    )
+    .join("");
+}
+
+/**
+ * Displays the outcome message for the round and updates the bet display.
+ * Disables in-game action buttons.
+ *
+ * @param {"win"|"lose"|"push"} outcome - The result of the round.
+ * @param {Object} state - The current game state object.
+ */
+export function displayOutcome(outcome, state) {
+  updateBetDisplay(true, state);
+  showResult(OUTCOME_MESSAGES[outcome] || "");
+  toggleButtons(false);
+}
+
+/**
+ * Updates the on-screen bet and player balance display.
+ *
+ * @param {boolean} isBetAccepted - Whether the bet was accepted.
+ * @param {Object} state - The current game state object.
+ */
+export function updateBetDisplay(isBetAccepted, state) {
+  if (!isBetAccepted) return;
+  document.getElementById(
+    "current-bet"
+  ).innerText = `Current Bet: $${state.currentBet}`;
+  document.getElementById(
+    "player-balance"
+  ).innerText = `Balance: $${state.playerBalance}`;
+}
+
+/**
+ * Shows a result message in the UI.
+ *
+ * @param {string} message - The message to display.
  */
 export function showResult(message) {
   document.getElementById("result").innerText = message;
 }
 
 /**
- * Enables or disables in-game buttons and toggles visibility of the reset button.
+ * Clears the result message from the UI.
+ */
+export function clearResult() {
+  document.getElementById("result").innerText = "";
+}
+
+/**
+ * Enables or disables hit/stand buttons and toggles the reset button visibility.
  *
- * @param {boolean} enabled - If true, enables "Hit" and "Stand" buttons; hides "Reset".
- *                            If false, disables "Hit"/"Stand" and shows "Reset".
+ * @param {boolean} enabled - Whether to enable action buttons.
  */
 export function toggleButtons(enabled) {
   document.getElementById("hit").disabled = !enabled;
@@ -73,42 +107,30 @@ export function toggleButtons(enabled) {
     ? "none"
     : "block";
 }
-
 /**
- * Clears the UI elements (hands, scores, result messages) to prepare for a new game.
- * Also re-enables buttons and hides the reset button.
+ * Resets all game-related UI elements to their default empty state.
+ * Also re-enables in-game action buttons.
  */
 export function resetUI() {
-  document.getElementById("player-hand").innerText = "";
-  document.getElementById("dealer-hand").innerText = "";
-  document.getElementById("player-score").innerText = "";
-  document.getElementById("dealer-score").innerText = "";
-  document.getElementById("result").innerText = "";
-
-  toggleButtons(true); // Enable buttons again
+  [
+    "player-hand",
+    "dealer-hand",
+    "player-score",
+    "dealer-score",
+    "result",
+  ].forEach((id) => {
+    document.getElementById(id).innerText = "";
+  });
+  toggleButtons(true);
   document.getElementById("reset-game").style.display = "none";
 }
 
-export function getCardImageFilename(card) {
-  const value = card.value.toLowerCase();
-  const suit = card.suit.toLowerCase();
-  return `${value}_of_${suit}.png`;
-}
-
-export function updateBetDisplay(isBetAccepted, gameState) {
-  if (isBetAccepted) {
-    document.getElementById(
-      "current-bet"
-    ).innerText = `Current Bet: $${gameState.currentBet}`;
-    document.getElementById(
-      "player-balance"
-    ).innerText = `Balance: $${gameState.playerBalance}`;
-  } else {
-    showResult("Insufficient amount.");
-    resetUI();
-  }
-}
-
-export function clearResult() {
-  document.getElementById("result").innerText = "";
+/**
+ * Returns the correct image filename for a given card object.
+ *
+ * @param {Object} card - The card object with value and suit properties.
+ * @returns {string} The filename for the card image.
+ */
+function getCardImageFilename(card) {
+  return `${card.value.toLowerCase()}_of_${card.suit.toLowerCase()}.png`;
 }

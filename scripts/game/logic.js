@@ -4,15 +4,17 @@ import {
   showResult,
   toggleButtons,
   updateBetDisplay,
+  displayOutcome,
 } from "../ui/updateUI.js";
 import { resolveRound } from "./betting.js";
-import { compareCards } from "./compare.js";
+import { OUTCOME, determineOutcome } from "./compare.js";
 
 /**
- * Calculates the total value of a hand in Blackjack, accounting for Aces as 1 or 11.
+ * Calculates the total value of a Blackjack hand, treating Aces as 1 or 11
+ * depending on which results in the highest score without busting.
  *
- * @param {Array<Object>} hand - Array of card objects.
- * @returns {number} The total score for the given hand.
+ * @param {Array<Object>} hand - Array of card objects ({ suit, value }).
+ * @returns {number} The total value of the hand.
  */
 export function calculateHandTotal(hand) {
   let total = 0;
@@ -38,13 +40,12 @@ export function calculateHandTotal(hand) {
 }
 
 /**
- * Determines if the dealer's hand is a "soft 17" (an Ace counted as 11 + other cards = 17).
- * Used to check whether the dealer should hit again per standard blackjack rules.
+ * Checks if a hand is a soft 17 (Ace counted as 11 plus other cards totaling 6).
+ * Used to determine if the dealer should draw another card according to common rules.
  *
- * @param {Array} hand - The dealer's current hand.
- * @returns {boolean} - True if the hand is a soft 17, false otherwise.
+ * @param {Array<Object>} hand - The dealer's current hand.
+ * @returns {boolean} True if the hand is a soft 17, false otherwise.
  */
-
 export function isSoft17(hand) {
   let aceCount = 0;
   for (let card of hand) {
@@ -54,13 +55,13 @@ export function isSoft17(hand) {
 }
 
 /**
- * Checks if the given hand has busted (total > 21).
- * If a bust occurs, updates the UI with the result and disables game controls.
+ * Checks if a hand has busted (> 21). If so, resolves the round,
+ * updates the UI, and disables player actions.
  *
- * @param {Array} hand - The hand to evaluate (player or dealer).
- * @param {boolean} isPlayer - True if evaluating the player's hand, false for dealer.
+ * @param {Array<Object>} hand - The hand to check.
+ * @param {boolean} isPlayer - True if this is the player's hand, false for dealer.
  * @param {Object} gameState - The current game state object.
- * @returns {boolean} - True if the hand is busted, otherwise false.
+ * @returns {boolean} True if the hand is busted, false otherwise.
  */
 export function checkBust(hand, isPlayer, gameState) {
   const total = calculateHandTotal(hand);
@@ -68,23 +69,22 @@ export function checkBust(hand, isPlayer, gameState) {
     showResult(
       isPlayer ? "You busted! Dealer wins." : "Dealer busted! You win."
     );
-    resolveRound(isPlayer ? "lose" : "win", gameState);
+    resolveRound(isPlayer ? OUTCOME.LOSE : OUTCOME.WIN, gameState);
     updateBetDisplay(true, gameState);
     updateHands(false, gameState);
     toggleButtons(false);
-
     return true;
   }
-
   return false;
 }
 
 /**
- * Draws a card for the player or dealer, updates UI, and checks for bust.
+ * Draws a card for either the player or dealer, updates the UI,
+ * and checks for bust.
  *
- * @param {boolean} isPlayer - True if drawing for player, false for dealer.
- * @param {Object} gameState - The current state of the game.
- * @returns {Object} Updated hand and bust status.
+ * @param {boolean} isPlayer - True for player, false for dealer.
+ * @param {Object} gameState - The current game state.
+ * @returns {{ hand: Array<Object>, busted: boolean }} The updated hand and bust status.
  */
 export function hit(isPlayer, gameState) {
   const hand = isPlayer ? gameState.playerHand : gameState.dealerHand;
@@ -97,12 +97,14 @@ export function hit(isPlayer, gameState) {
 }
 
 /**
- * Handles dealer's turn after player stands, and determines the winner.
+ * Executes the dealer's turn after the player stands.
+ * Dealer draws until reaching 17 or higher, following the soft 17 rule,
+ * then determines the round outcome.
  *
- * @param {Object} gameState - The current state of the game.
+ * @param {Object} gameState - The current game state.
  */
 export function stand(gameState) {
-  const { playerHand, dealerHand } = gameState;
+  const { dealerHand } = gameState;
   updateHands(false, gameState);
 
   while (
@@ -110,23 +112,26 @@ export function stand(gameState) {
     (calculateHandTotal(dealerHand) === 17 && isSoft17(dealerHand))
   ) {
     hit(false, gameState);
-
     updateHands(false, gameState);
   }
 
   if (!checkBust(dealerHand, false, gameState)) {
-    compareCards(playerHand, dealerHand);
+    const outcome = determineOutcome(
+      gameState.playerHand,
+      dealerHand,
+      gameState
+    );
+    displayOutcome(outcome, gameState);
   }
 }
 
 /**
- * Deals two cards each to the player and dealer and updates the UI.
+ * Deals the initial two cards to player and dealer,
+ * then checks for an immediate blackjack.
  *
- * @param {Object} gameState - The current state of the game including deck, hands, and scores.
- * @var ended - boolean variable that holds checkBlackJack's return value. If true then game is ended, else continue game
+ * @param {Object} gameState - The current game state.
  */
 export function dealInitialCards(gameState) {
-  // Deal 2 cards to player and dealer
   gameState.playerHand = [gameState.deck.pop(), gameState.deck.pop()];
   gameState.dealerHand = [gameState.deck.pop(), gameState.deck.pop()];
 
@@ -141,36 +146,39 @@ export function dealInitialCards(gameState) {
 }
 
 /**
- * Checks if the player or dealer has a natural blackjack (Ace + 10-value card).
- * Should be called immediately after the initial cards are dealt.
+ * Checks for a natural blackjack (Ace + 10-value card) for either player or dealer.
+ * If detected, resolves the round immediately.
  *
- * @param {Array} playerHand - The player's hand.
- * @param {Array} dealerHand - The dealer's hand.
- * @param {Object} gameState - The current game state object.
- * @returns {boolean} - True if the round ends due to blackjack, otherwise false.
+ * @param {Array<Object>} playerHand - The player's starting hand.
+ * @param {Array<Object>} dealerHand - The dealer's starting hand.
+ * @param {Object} gameState - The current game state.
+ * @returns {boolean} True if the round ends due to blackjack, false otherwise.
  */
 export function checkBlackjack(playerHand, dealerHand, gameState) {
   gameState.playerTotal = calculateHandTotal(playerHand);
   gameState.dealerTotal = calculateHandTotal(dealerHand);
 
   if (gameState.playerTotal === 21 && gameState.dealerTotal !== 21) {
-    resolveRound("blackjack", gameState);
+    resolveRound(OUTCOME.BLACKJACK, gameState);
     updateBetDisplay(true, gameState);
     updateHands(false, gameState);
-    showResult("BlackJack! You Win!");
+    showResult("Blackjack! You win!");
     toggleButtons(false);
+    return true;
   } else if (gameState.playerTotal !== 21 && gameState.dealerTotal === 21) {
-    resolveRound("lose", gameState);
+    resolveRound(OUTCOME.LOSE, gameState);
     updateBetDisplay(true, gameState);
     updateHands(false, gameState);
-    showResult("Dealer BlackJack! Dealer Wins!");
+    showResult("Dealer Blackjack! Dealer wins!");
     toggleButtons(false);
+    return true;
   } else if (gameState.playerTotal === 21 && gameState.dealerTotal === 21) {
     updateHands(false, gameState);
     updateBetDisplay(true, gameState);
-    resolveRound("push", gameState);
-    showResult("You and Dealer have BlackJack! Push.");
+    resolveRound(OUTCOME.PUSH, gameState);
+    showResult("Both have Blackjack! Push.");
     toggleButtons(false);
+    return true;
   }
   return false;
 }
