@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlackJack</title>
+    <link rel="stylesheet" href="test.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <div class="game-header">
+        <div class="header-spacer" aria-hidden="true"></div>
+
+        <h1 id="game-title">BlackJack</h1>
+
+        <div class="header-meta">
+          <div class="pill">
+            <span class="label">Bankroll:</span>
+            <span id="player-balance">$0</span>
+          </div>
+          <div class="pill">
+            <span class="label">Current Bet:</span>
+            <span id="current-bet">$10,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dealer-area">
+        <label id="dealer-label">Dealer Label</label>
+        <p id="dealer-score">Dealer Score:</p>
+        <div id="dealer-cards-row"></div>
+      </div>
+
+      <div class="outcome-banner-area">
+        <label id="outcome-label"> Outcome Label </label>
+      </div>
+
+      <div class="player-area">
+        <label id="player-label">Player Label</label>
+        <p id="player-score">Player Score:</p>
+      </div>
+
+      <div class="controls-area">
+        <button id="hit">Hit</button>
+        <button id="stand">Stand</button>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,103 @@
+/* ------ GAME CONTAINER -------- */
+.game-container {
+    height: 1000px;
+    margin: 0 auto;
+    width: 1200px;
+    background-color: antiquewhite;
+    padding: 12px;
+}
+
+/* ------ HEADER LAYOUT -------- */
+.game-header {
+    height: 10%;
+    width: auto;
+    background-color: aliceblue;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    gap: 12px;
+}
+/* 1) LEFT */
+.header-spacer {
+    flex: 1 1 0;
+}
+/* 2) CENTER */
+#game-title {
+    margin: 0;
+    flex: 0 0 auto;
+    text-align: center;
+    
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* 3) RIGHT */
+.header-meta {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Small visual for each chip; PLACEHOLDER FOR NOW */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+}
+
+/* mutes label compared to the value */
+.pill .label {
+    opacity: 0.8; 
+}
+
+
+
+
+
+.dealer-area {
+    height: 30%;
+    width: auto;
+    background-color: aqua;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.outcome-banner-area {
+    height: 15%;
+    width: auto;
+    background-color: blueviolet;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-area {
+    height: 30%;
+    width: auto;
+    background-color: blue;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.controls-area {
+    height: 15%;
+    width: auto;
+    background-color: brown;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
