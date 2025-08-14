@@ -26,23 +26,41 @@
       </div>
 
       <div class="dealer-area">
-        <label id="dealer-label">Dealer Label</label>
-        <p id="dealer-score">Dealer Score:</p>
-        <div id="dealer-cards-row"></div>
+        <div class="dealer-info">
+          <label id="dealer-label">Dealer Label</label>
+          <p id="dealer-score">Dealer Score:</p>
+        </div>
+        <div id="dealer-cards-row">
+          <!-- Cards go here -->
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
       </div>
 
       <div class="outcome-banner-area">
-        <label id="outcome-label"> Outcome Label </label>
+        <div class="outcome-banner" role="status" aria-live="polite">
+          Place your bet
+        </div>
       </div>
 
       <div class="player-area">
-        <label id="player-label">Player Label</label>
-        <p id="player-score">Player Score:</p>
+        <div class="player-info">
+          <label id="player-label">Player Label</label>
+          <p id="player-score">Player Score:</p>
+        </div>
+        <div id="player-cards-row">
+          <!-- Cards go here -->
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
       </div>
 
       <div class="controls-area">
-        <button id="hit">Hit</button>
-        <button id="stand">Stand</button>
+        <button id="hit" class="btn btn-primary" type="button">Hit</button>
+        <button id="stand" class="btn btn-secondary" type="button">
+          Stand
+        </button>
       </div>
     </div>
   </body>
