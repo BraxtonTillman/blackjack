@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BlackJack</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="test.css" />
   </head>
   <body>
@@ -25,36 +30,38 @@
         </div>
       </div>
 
-      <div class="dealer-area">
-        <div class="dealer-info">
-          <label id="dealer-label">Dealer Label</label>
-          <p id="dealer-score">Dealer Score:</p>
+      <section class="table">
+        <div class="dealer-area">
+          <div class="dealer-info">
+            <span id="dealer-label">Dealer Label</span>
+            <p id="dealer-score">Dealer Score:</p>
+          </div>
+          <div id="dealer-cards-row">
+            <!-- Cards go here -->
+            <div class="card"></div>
+            <div class="card"></div>
+          </div>
         </div>
-        <div id="dealer-cards-row">
-          <!-- Cards go here -->
-          <div class="card"></div>
-          <div class="card"></div>
-        </div>
-      </div>
 
-      <div class="outcome-banner-area">
-        <div class="outcome-banner" role="status" aria-live="polite">
-          Place your bet
+        <div class="outcome-banner-area">
+          <div class="outcome-banner" role="status" aria-live="polite">
+            Place your bet
+          </div>
         </div>
-      </div>
 
-      <div class="player-area">
-        <div class="player-info">
-          <label id="player-label">Player Label</label>
-          <p id="player-score">Player Score:</p>
+        <div class="player-area">
+          <div class="player-info">
+            <span id="player-label">Player Label</span>
+            <p id="player-score">Player Score:</p>
+          </div>
+          <div id="player-cards-row">
+            <!-- Cards go here -->
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+          </div>
         </div>
-        <div id="player-cards-row">
-          <!-- Cards go here -->
-          <div class="card"></div>
-          <div class="card"></div>
-          <div class="card"></div>
-        </div>
-      </div>
+      </section>
 
       <div class="controls-area">
         <button id="hit" class="btn btn-primary" type="button">Hit</button>

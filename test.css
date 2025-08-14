@@ -1,215 +1,283 @@
+/* -------------------- Base / Tokens -------------------- */
 *,
 *::before,
 *::after { box-sizing: border-box; }
 
-/* ------ GAME CONTAINER -------- */
+:root {
+  --bg: #0B0F14;             /* near-black room */
+  --felt: #0E4D2E;           /* deep green table */
+  --felt-edge: #093922;      /* darker edge for inner shadow */
+  --surface: #162029;        /* dark panels */
+  --text: #E6EDF3;           /* primary text */
+  --muted: #A5B1BD;          /* secondary text */
+  --accent: #D4AF37;         /* gold accent */
+  --pos: #2ECC71;            /* win */
+  --neg: #E74C3C;            /* loss */
+  --neu: #3498DB;            /* push/info */
+  --radius-lg: 24px;
+  --radius-sm: 12px;
+  --gap-md: 12px;
+  --header-min: 64px;
+  --controls-min: 80px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* -------------------- Layout Container -------------------- */
 .game-container {
-    height: 1000px;
-    margin: 0 auto;
-    width: 1200px;
-    background-color: antiquewhite;
-    padding: 12px;
+  min-height: 100svh;
+  width: 100vw;
+  max-width: none;
+  margin: 0;
+  padding-inline: clamp(12px, 3vw, 32px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* ------ HEADER LAYOUT -------- */
+/* -------------------- Header -------------------- */
 .game-header {
-    height: 10%;
-    width: auto;
-    background-color: grey;
+  background: var(--surface);
+  min-height: var(--header-min);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  gap: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    gap: 12px;
-}
-/* 1) LEFT */
-.header-spacer {
-    flex: 1 1 0;
-}
-/* 2) CENTER */
+.header-spacer { flex: 1 1 0; }
+
 #game-title {
-    margin: 0;
-    flex: 0 0 auto;
-    text-align: center;
-    
-    font-size: 1.5rem;
-    font-weight: 700;
+  margin: 0;
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
-/* 3) RIGHT */
 .header-meta {
-    flex: 1 1 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
+  flex: 1 1 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Small visual for each chip; PLACEHOLDER FOR NOW */
 .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.6);
-    font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* mutes label compared to the value */
-.pill .label {
-    opacity: 0.8; 
+.pill .label { color: var(--muted); }
+
+/* -------------------- Felt Table -------------------- */
+.table {
+  background: radial-gradient(120% 140% at 50% 10%, var(--felt) 0%, var(--felt-edge) 100%);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow:
+    inset 0 6px 24px rgba(0,0,0,0.35),
+    0 20px 40px rgba(0,0,0,0.45);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
 }
 
-/* ------ DEALER / PLAYER LAYOUT -------- */
+/* -------------------- Dealer / Player Areas -------------------- */
+.dealer-area,
 .player-area {
-    height: 30%;
-    width: auto;
-    background-color: blue;
+  display: flex;
+  flex-direction: column;     /* info row above cards */
+  gap: 10px;
+  flex: 1;
 }
 
-.dealer-area {
-    height: 30%;
-    width: auto;
-    background-color: aqua;
-}
-
-/* DEALER / PLAYER INFO */
 .dealer-info,
 .player-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: auto;
-    padding: 0 16px;
-    font-size: 1.25rem;
-    font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
-/* ROW OF CARDS */
+#dealer-score,
+#player-score {
+  /* style the totals like small pills */
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.2);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Card rows */
 #dealer-cards-row,
 #player-cards-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 12px; /* space between cards */
-    flex-wrap: nowrap;
-    width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 20px);
+  flex-wrap: nowrap;       /* wraps later on small screens via media query */
+  width: 100%;
 }
 
-/* DUMMY CARDS */
+/* Cards (placeholder look) */
 .card {
-  width: 60px;
-  height: 90px;
-  background-color: white;
-  border: 2px solid black;
+  width: clamp(50px, 7vw, 110px);
+  height: clamp(75px, 10.5vw, 165px);
+  background: #fff;
   border-radius: 8px;
-
+  border: 1px solid rgba(0,0,0,0.35);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
   flex: 0 0 auto;
 }
 
-/* ------- OUTCOME BANNER LAYOUT -------- */
+/* -------------------- Outcome Banner -------------------- */
 .outcome-banner-area {
-    height: 10%;
-    width: auto;
-    background-color: blueviolet;
-    padding: 8px 12px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
 }
 
-/* THE ACTUAL BANNER */
- .outcome-banner {
-    min-height: 56px; /* reserve space so layout doesn't jump */
-    width: min(800px, 100%); /* max readable line length */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+.outcome-banner {
+  min-height: 56px;
+  width: clamp(200px, 50%, 500px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
-    padding: 8px 12px;
-    border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
 
-    /* neutral/idle look; tweak to match theme later */
-    background: rgba(255, 255, 255, 0.25);
-    color: #111;
-    font-size: 1.25rem;
-    font-weight: 700;
- }
- 
- /* Result modifiers; toggle via JS later */
-    .outcome-banner.is-win  { background: rgba(46, 204, 113, 0.25); color: #0f5132; }
-    .outcome-banner.is-loss { background: rgba(231, 76, 60,  0.25); color: #842029; }
-    .outcome-banner.is-push { background: rgba(52, 152, 219, 0.25); color: #084298; }
+  background: rgba(255,255,255,0.12);  /* subtle over felt */
+  color: var(--text);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
 
-/* ------- CONTROLS BAR LAYOUT -------- */
+.outcome-banner.is-win  { background: rgba(46, 204, 113, 0.18); color: #d8ffe9; border-color: rgba(46,204,113,0.35); }
+.outcome-banner.is-loss { background: rgba(231, 76, 60,  0.18); color: #ffe3e0; border-color: rgba(231,76,60,0.35); }
+.outcome-banner.is-push { background: rgba(52, 152, 219, 0.18); color: #e2f1ff; border-color: rgba(52,152,219,0.35); }
+
+/* -------------------- Controls -------------------- */
 .controls-area {
-    height: 20%;
-    width: auto;
-    background-color: brown;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding: 12px 16px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  min-height: var(--controls-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.35);
 }
 
-/* BASE BUTTON */
 .btn {
-    display:inline-flex;
-    align-items: center;
-    justify-content: center;
-    
-    height: 48px;
-    padding: 0 18px;
-    border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1;
-    white-space: nowrap;
-    cursor: pointer;
-    user-select: none;
-    border: 1px solid transparent;
-    transition: transform 80ms ease, opacity 120ms ease, box-shadow 120ms ease;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  transition: transform 80ms ease, opacity 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
 }
 
-/* Primary (Hit) - filled */
+/* Primary (Hit) – gold */
 .btn-primary {
-    background: #d4af37;    /* placeholder “gold” accent */
-    color: #111;
-    border-color: rgba(0,0,0,0.1)
+  background: var(--accent);
+  color: #111;
+  border-color: rgba(0,0,0,0.15);
 }
-
 .btn-primary:hover { transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
 
-/* Secondary (Stand) - outline/subtle */
+/* Secondary (Stand) – subtle surface */
 .btn-secondary {
-    background: rgba(255,255,255,0.15);
-    color: #111;
-    border-color: rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  border-color: rgba(255,255,255,0.12);
 }
-
 .btn-secondary:hover { transform: translateY(-1px); }
 .btn-secondary:active { transform: translateY(0); }
 
-/* Focus visibility (keyboard users) */
+/* Focus ring for keyboard users */
 .btn:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.45); /* thin focus ring */
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.45);
 }
 
-/* Disabled look (set disabled via HTML or JS) */
+/* Disabled */
 .btn:disabled,
 .btn[disabled] {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
+}
+
+/* -------------------- Responsiveness -------------------- */
+@media (max-width: 900px) {
+  #game-title { font-size: 1.25rem; }
+  .pill { padding: 4px 8px; }
+  .dealer-info, .player-info { padding: 0 10px; font-size: 1.05rem; }
+  .outcome-banner { width: min(640px, 100%); font-size: 1.125rem; }
+  #dealer-cards-row, #player-cards-row { flex-wrap: wrap; }
+}
+
+@media (max-width: 600px) {
+  .game-header { padding: 8px 10px; gap: 8px; }
+  .header-meta { flex-wrap: wrap; gap: 6px; }
+  #game-title { font-size: 1.125rem; }
+  .pill { font-size: 0.9rem; }
+
+  .outcome-banner {
+    min-height: 48px;
+    width: 100%;
+    font-size: 1rem;
+    padding: 8px 10px;
+  }
+
+  #dealer-cards-row, #player-cards-row {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
 }
