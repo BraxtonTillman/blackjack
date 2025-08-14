@@ -107,7 +107,7 @@
   border: 2px solid black;
   border-radius: 8px;
 
-  flex: 0 0 auto
+  flex: 0 0 auto;
 }
 
 /* ------- OUTCOME BANNER LAYOUT -------- */
@@ -139,12 +139,12 @@
     color: #111;
     font-size: 1.25rem;
     font-weight: 700;
-
-    /* Result modifiers; toggle via JS later */
+ }
+ 
+ /* Result modifiers; toggle via JS later */
     .outcome-banner.is-win  { background: rgba(46, 204, 113, 0.25); color: #0f5132; }
     .outcome-banner.is-loss { background: rgba(231, 76, 60,  0.25); color: #842029; }
     .outcome-banner.is-push { background: rgba(52, 152, 219, 0.25); color: #084298; }
- }
 
 /* ------- CONTROLS BAR LAYOUT -------- */
 .controls-area {
