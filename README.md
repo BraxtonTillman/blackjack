@@ -64,8 +64,8 @@ blackjack/
 - [x] Core Blackjack logic
 - [x] UI interaction (buttons, results, display)
 - [x] Blackjack & bust detection
-- [ ] Betting system
-- [ ] Player balance
+- [x] Betting system
+- [x] Player balance
 - [ ] Backend integration
 - [ ] Authentication
 
