@@ -4,47 +4,79 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BlackJack</title>
-    <link rel="stylesheet" href="style/main.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style/style.css" />
   </head>
   <body>
-    <h1>BlackJack</h1>
+    <div class="game-container">
+      <div class="game-header">
+        <div class="header-spacer" aria-hidden="true"></div>
 
-    <button id="start-game">Start</button>
+        <h1 id="game-title">BlackJack</h1>
 
-    <p id="player-balance"></p>
-    <p id="current-bet"></p>
+        <div class="header-meta">
+          <div class="pill">
+            <span class="label">Bankroll:</span>
+            <span id="player-balance">$0</span>
+          </div>
+          <div class="pill">
+            <span class="label">Current Bet:</span>
+            <span id="current-bet">$10,000</span>
+          </div>
+        </div>
+      </div>
 
-    <div id="stats">
-      Wins: <span id="wins-count">0</span> | Losses:
-      <span id="losses-count">0</span>
+      <section class="table">
+        <div class="dealer-area">
+          <div class="dealer-info">
+            <span id="dealer-label">Dealer Label</span>
+            <p id="dealer-score">Dealer Score:</p>
+          </div>
+          <div id="dealer-cards-row">
+            <!-- Cards go here -->
+            <div class="card"></div>
+            <div class="card"></div>
+          </div>
+        </div>
+
+        <div class="outcome-banner-area">
+          <div class="outcome-banner" role="status" aria-live="polite">
+            Place your bet
+          </div>
+          <button
+            id="play-again"
+            class="btn btn-secondary"
+            style="display: none"
+          >
+            Play Again
+          </button>
+        </div>
+
+        <div class="player-area">
+          <div class="player-info">
+            <span id="player-label">Player Label</span>
+            <p id="player-score">Player Score:</p>
+          </div>
+          <div id="player-cards-row">
+            <!-- Cards go here -->
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="controls-area">
+        <button id="hit" class="btn btn-primary" type="button">Hit</button>
+        <button id="stand" class="btn btn-secondary" type="button">
+          Stand
+        </button>
+      </div>
     </div>
-
-    <div id="betting-area" style="display: none">
-      <label for="bet-input">Bet: </label>
-      <input
-        type="text"
-        id="bet-input"
-        name="amount"
-        placeholder="Enter a bet amount "
-      />
-      <button id="place-bet">Place Bet</button>
-    </div>
-
-    <div id="game-area" style="display: none">
-      <h2>Player's Hand</h2>
-      <p id="player-hand"></p>
-      <p id="player-score"></p>
-      <h2>Dealer's Hand</h2>
-      <p id="dealer-hand"></p>
-      <p id="dealer-score"></p>
-
-      <button id="hit">Hit</button>
-      <button id="stand">Stand</button>
-    </div>
-
-    <p id="result"></p>
-
-    <button id="reset-game" style="display: none">Play Again?</button>
-    <script type="module" src="./scripts/game/main.js"></script>
+    <script type="module" src="/scripts/game/main.js"></script>
   </body>
 </html>

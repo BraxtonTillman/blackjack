@@ -1,4 +1,4 @@
-// blackjackUI.js
+// updateUI.js
 import { calculateHandTotal } from "../game/logic.js";
 
 /**
@@ -8,6 +8,7 @@ const OUTCOME_MESSAGES = {
   win: "You win!",
   lose: "Dealer wins!",
   push: "Push.",
+  blackjack: "Blackjack! You win!",
 };
 
 /**
@@ -18,15 +19,15 @@ const OUTCOME_MESSAGES = {
  * @param {Object} state - The current game state object.
  */
 export function updateHands(hideDealerCard = true, state) {
-  renderHand("player-hand", state.playerHand);
-  renderHand("dealer-hand", state.dealerHand, hideDealerCard);
+  renderHand("player-cards-row", state.playerHand);
+  renderHand("dealer-cards-row", state.dealerHand, hideDealerCard);
 
   document.getElementById(
     "player-score"
   ).innerText = `Player Score: ${calculateHandTotal(state.playerHand)}`;
   document.getElementById("dealer-score").innerText = hideDealerCard
-    ? "?"
-    : calculateHandTotal(state.dealerHand);
+    ? "Dealer Score: ?"
+    : `Dealer Score: ${calculateHandTotal(state.dealerHand)}`;
 }
 
 /**
@@ -51,14 +52,11 @@ function renderHand(containerId, hand, hideFirstCard = false) {
 }
 
 /**
- * Displays the outcome message for the round and updates the bet display.
- * Disables in-game action buttons.
+ * Displays the outcome message for the round and disables in-game action buttons.
  *
- * @param {"win"|"lose"|"push"} outcome - The result of the round.
- * @param {Object} state - The current game state object.
+ * @param {"win"|"lose"|"push"|"blackjack"} outcome - The result of the round.
  */
-export function displayOutcome(outcome, state) {
-  updateBetDisplay(true, state);
+export function displayOutcome(outcome) {
   showResult(OUTCOME_MESSAGES[outcome] || "");
   toggleButtons(false);
 }
@@ -71,58 +69,55 @@ export function displayOutcome(outcome, state) {
  */
 export function updateBetDisplay(isBetAccepted, state) {
   if (!isBetAccepted) return;
-  document.getElementById(
-    "current-bet"
-  ).innerText = `Current Bet: $${state.currentBet}`;
+  document.getElementById("current-bet").innerText = `$${state.currentBet}`;
   document.getElementById(
     "player-balance"
-  ).innerText = `Balance: $${state.playerBalance}`;
+  ).innerText = `$${state.playerBalance}`;
 }
 
 /**
- * Shows a result message in the UI.
+ * Shows a result message in the outcome banner.
  *
  * @param {string} message - The message to display.
  */
 export function showResult(message) {
-  document.getElementById("result").innerText = message;
+  document.querySelector(".outcome-banner").innerText = message;
 }
 
 /**
- * Clears the result message from the UI.
+ * Clears the result message from the outcome banner.
  */
 export function clearResult() {
-  document.getElementById("result").innerText = "";
+  document.querySelector(".outcome-banner").innerText = "Place your bet";
 }
 
 /**
- * Enables or disables hit/stand buttons and toggles the reset button visibility.
+ * Enables or disables hit/stand buttons.
  *
  * @param {boolean} enabled - Whether to enable action buttons.
  */
 export function toggleButtons(enabled) {
   document.getElementById("hit").disabled = !enabled;
   document.getElementById("stand").disabled = !enabled;
-  document.getElementById("reset-game").style.display = enabled
-    ? "none"
-    : "block";
+
+  // Show Play Again button only when round ends
+  const playAgainBtn = document.getElementById("play-again");
+  if (playAgainBtn) {
+    playAgainBtn.style.display = enabled ? "none" : "block";
+  }
 }
+
 /**
  * Resets all game-related UI elements to their default empty state.
- * Also re-enables in-game action buttons.
  */
 export function resetUI() {
-  [
-    "player-hand",
-    "dealer-hand",
-    "player-score",
-    "dealer-score",
-    "result",
-  ].forEach((id) => {
-    document.getElementById(id).innerText = "";
+  ["player-cards-row", "dealer-cards-row"].forEach((id) => {
+    document.getElementById(id).innerHTML = "";
   });
+  document.getElementById("player-score").innerText = "Player Score:";
+  document.getElementById("dealer-score").innerText = "Dealer Score:";
+  clearResult();
   toggleButtons(true);
-  document.getElementById("reset-game").style.display = "none";
 }
 
 /**
@@ -137,10 +132,9 @@ function getCardImageFilename(card) {
 
 /**
  * Updates the wins and losses count in the UI.
- *
- * @param {Object} state - The current game state object.
+ * (Dummy for v1.0 — your HTML doesn’t have these yet)
  */
 export function updateStats(gameState) {
-  document.getElementById("wins-count").innerText = gameState.wins;
-  document.getElementById("losses-count").innerText = gameState.losses;
+  // For now, do nothing or log to console
+  console.log(`Wins: ${gameState.wins}, Losses: ${gameState.losses}`);
 }
