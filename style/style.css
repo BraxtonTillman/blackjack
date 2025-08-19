@@ -147,15 +147,14 @@ html, body {
 }
 
 /* Cards (placeholder look) */
-.card {
-  width: clamp(50px, 7vw, 110px);
-  height: clamp(75px, 10.5vw, 165px);
-  background: #fff;
-  border-radius: 8px;
-  border: 1px solid rgba(0,0,0,0.35);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
-  flex: 0 0 auto;
+.card-img {
+  width: 80px;    /* adjust until it feels right */
+  height: auto;   /* keep aspect ratio */
+  margin: 4px;    /* spacing between cards */
+  border-radius: 6px; /* optional: softer corners */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3); /* optional: casino look */
 }
+
 
 /* -------------------- Outcome Banner -------------------- */
 .outcome-banner-area {
