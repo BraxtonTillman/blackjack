@@ -1,6 +1,6 @@
 # 🃏 Blackjack
 
-A professional-grade Blackjack game built with modular JavaScript. This project is structured like a production-ready web application and is the foundation for a future legal online betting platform.
+A professional-grade Blackjack game built with modular JavaScript.
 
 ## 🎯 Purpose
 
