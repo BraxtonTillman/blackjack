@@ -4,7 +4,7 @@ A professional-grade Blackjack game built with modular JavaScript.
 
 ## 🎯 Purpose
 
-This project simulates a full game of Blackjack with clean code architecture, modular design, and scalable structure. It is currently in MVP stage with plans to evolve into a secure, legal, and user-friendly online betting platform.
+This project simulates a full game of Blackjack with clean code architecture, modular design, and scalable structure. The goal was to learn JavaScript and how DOM manipulation, UI rendering, and game logic work under the same hood. 
 
 ## 💻 Features
 
@@ -79,7 +79,6 @@ This is a personal educational project. Deployment of any online betting or gamb
 - Integrate a betting system with real or virtual currency
 - Persist player balance and win history in a backend (Node + DB)
 - Add visual card rendering with animations
-- Prepare for legal audit and compliance review
 
 ## 🧠 Built With
 
